@@ -109,4 +109,22 @@ class DotsRotatorView(ctx : Context) : View(ctx) {
             state.startUpdating(startcb)
         }
     }
+
+    data class Renderer (var view : DotsRotatorView) {
+        private val animator : Animator = Animator(view)
+        private val dotsRotator : DotsRotator = DotsRotator(0)
+        fun render(canvas : Canvas, paint : Paint) {
+            dotsRotator.draw(canvas, paint)
+            animator.animate {
+                dotsRotator.update {
+                    animator.stop()
+                }
+            }
+        }
+        fun handleTap() {
+            dotsRotator.startUpdating {
+                animator.start()
+            }
+        }
+    }
 }
