@@ -4,6 +4,7 @@ package ui.anwesome.com.dotsrotatorview
  * Created by anweshmishra on 16/04/18.
  */
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.*
 import android.view.View
@@ -132,6 +133,13 @@ class DotsRotatorView(ctx : Context) : View(ctx) {
             dotsRotator.startUpdating {
                 animator.start()
             }
+        }
+    }
+    companion object {
+        fun create(activity : Activity) : DotsRotatorView{
+            val view : DotsRotatorView = DotsRotatorView(activity)
+            activity.setContentView(view)
+            return view
         }
     }
 }
