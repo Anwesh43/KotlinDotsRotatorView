@@ -23,7 +23,7 @@ class DotsRotatorView(ctx : Context) : View(ctx) {
 
     data class State (var prevScale : Float = 0f, var dir : Float = 0f, var j : Int = 0) {
 
-        private val scales : Array<Float> = arrayOf(0f, 0f, 0f, 0f, 0f, 0f)
+        val scales : Array<Float> = arrayOf(0f, 0f, 0f, 0f, 0f, 0f)
 
         fun update (stopcb : (Float) -> Unit) {
             scales[j] += dir * 0.1f
@@ -73,6 +73,40 @@ class DotsRotatorView(ctx : Context) : View(ctx) {
             if (animated) {
                 animated = false
             }
+        }
+    }
+
+    data class DotsRotator(var i : Int = 0, private val state : State = State()) {
+        fun draw(canvas : Canvas, paint : Paint) {
+            val w : Float = canvas.width.toFloat()
+            val h : Float = canvas.height.toFloat()
+            val l : Float = Math.min(w,h) * 0.4f
+            val r : Float = Math.min(w, h)/15
+            var sf : Float = 0f
+            for (i in 0..3) {
+                sf += state.scales[i+2]
+            }
+            paint.color = Color.parseColor("#212121")
+            canvas.save()
+            canvas.translate(w/2, h/2)
+            canvas.rotate(90f * sf)
+            for (i in 0..2) {
+                val ox : Float = 0f
+                val dx : Float = -w/4 + i * w/4
+                canvas.save()
+                canvas.translate(ox + (dx - ox) * state.scales[1],l * state.scales[0])
+                canvas.drawCircle(0f, 0f, r, paint)
+                canvas.restore()
+            }
+            canvas.restore()
+        }
+
+        fun update(stopcb : (Float) -> Unit) {
+            state.update(stopcb)
+        }
+
+        fun startUpdating(startcb : () -> Unit) {
+            state.startUpdating(startcb)
         }
     }
 }
